@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import './App.css'
 import BatchNew from './components/pages/BatchNew'
 import Dashboard from './components/pages/Dashboard'
+import InitReducers from './components/misc/InitReducers'
 import store from './store'
 import { getMode, setMode } from './actions/darkModeActions'
 
@@ -26,6 +27,7 @@ const App = () => {
 	return (
 		<Provider store={store}>
 			<ThemeProvider theme={theme}>
+				<InitReducers />
 				<CssBaseline />
 				<Router>
 					<Switch>

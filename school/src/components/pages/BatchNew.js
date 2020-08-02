@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { Typography } from '@material-ui/core'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 
 import Form from '../form/Form.js'
-import { batchAdd } from '../../actions/batchActions.js'
+import { batchAdd } from '../../actions/commonActions.js'
 import { useStyles } from '../../theme'
 
-const BatchNew = ({ batchAdd }) => {
+const BatchNew = ({ batchAdd, history }) => {
 	const [data, setData] = useState({})
 
 	const classes = useStyles()
@@ -36,7 +37,10 @@ const BatchNew = ({ batchAdd }) => {
 		setData(copyData)
 	}
 
-	const submitHandler = () => batchAdd(data)
+	const submitHandler = () => {
+		batchAdd(data)
+		history.push('/')
+	}
 
 	const inputs = [
 		{
@@ -75,4 +79,4 @@ const BatchNew = ({ batchAdd }) => {
 	)
 }
 
-export default connect(null, { batchAdd })(BatchNew)
+export default connect(null, { batchAdd })(withRouter(BatchNew))
