@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
-import { Typography } from '@material-ui/core'
+import { makeStyles, Typography } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
+import BackButton from '../misc/BackButton.js'
 import Form from '../form/Form.js'
 import { batchAdd } from '../../actions/commonActions.js'
 import { useStyles } from '../../theme'
@@ -11,6 +12,8 @@ const BatchNew = ({ batchAdd, history }) => {
 	const [data, setData] = useState({})
 
 	const classes = useStyles()
+
+	const localClasses = useLocalStyles()
 
 	const inputHandler = ({ target: { name, value } }) =>
 		setData({ ...data, [name]: value })
@@ -71,6 +74,7 @@ const BatchNew = ({ batchAdd, history }) => {
 
 	return (
 		<div className={classes.page}>
+			<BackButton className={localClasses.backButton} history={history} />
 			<Typography component='h1' variant='h4'>
 				Add New Batch
 			</Typography>
@@ -78,5 +82,11 @@ const BatchNew = ({ batchAdd, history }) => {
 		</div>
 	)
 }
+
+const useLocalStyles = makeStyles(theme => ({
+	backButton: {
+		margin: theme.spacing(3) + 'px 0px',
+	},
+}))
 
 export default connect(null, { batchAdd })(withRouter(BatchNew))
