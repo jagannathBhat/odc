@@ -7,7 +7,7 @@ import {
 	Typography,
 } from '@material-ui/core'
 
-const Form = ({ data, inputs, submitHandler }) => {
+const Form = ({ data, hideSubmit, inputs, submitHandler }) => {
 	const localClasses = useLocalStyles()
 
 	return (
@@ -19,7 +19,7 @@ const Form = ({ data, inputs, submitHandler }) => {
 						return (
 							input.data.length > 0 && (
 								<div className={localClasses.list} key={index}>
-									<Typography component='p' variant='h4'>
+									<Typography component='p' variant='h5'>
 										{label}
 									</Typography>
 									{input.data.map((item, index) => (
@@ -42,7 +42,7 @@ const Form = ({ data, inputs, submitHandler }) => {
 					case 'list': {
 						return (
 							<div className={localClasses.list} key={index}>
-								<Typography component='p' variant='h4'>
+								<Typography component='p' variant='h5'>
 									{label}
 								</Typography>
 								{data[name] &&
@@ -112,14 +112,16 @@ const Form = ({ data, inputs, submitHandler }) => {
 					}
 				}
 			})}
-			<Button
-				className={localClasses.submit}
-				color='primary'
-				onClick={submitHandler}
-				variant='contained'
-			>
-				Submit
-			</Button>
+			{!hideSubmit && (
+				<Button
+					className={localClasses.submit}
+					color='primary'
+					onClick={submitHandler}
+					variant='contained'
+				>
+					Submit
+				</Button>
+			)}
 		</>
 	)
 }
