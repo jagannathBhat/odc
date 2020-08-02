@@ -1,13 +1,11 @@
-import { TEST_ADD, TEST_INIT } from '../actions/types'
+import { STATUS_UPDATE } from '../actions/types'
 
 const initialState = []
 
 export default (state = initialState, action) => {
 	switch (action.type) {
-		case TEST_ADD:
+		case STATUS_UPDATE:
 			return [...state, action.payload]
-		case TEST_INIT:
-			return action.payload
 		default:
 			return state
 	}

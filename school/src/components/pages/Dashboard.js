@@ -24,7 +24,10 @@ const Dashboard = ({ history }) => {
 				</Typography>
 			</div>
 			<Card className={localClasses.addMarks + ' ' + localClasses.card}>
-				<CardActionArea className={localClasses.cardAction}>
+				<CardActionArea
+					className={localClasses.cardAction}
+					onClick={() => history.push('/marks/add')}
+				>
 					<CardContent>
 						<Typography color='secondary' component='h1' variant='h5'>
 							Add Marks
@@ -69,7 +72,9 @@ const Dashboard = ({ history }) => {
 					</div>
 				))}
 				<div className={localClasses.button}>
-					<Button color='primary'>View All Entries</Button>
+					<Button color='primary' onClick={() => history.push('/marks/view')}>
+						View All Entries
+					</Button>
 				</div>
 			</div>
 		</div>
