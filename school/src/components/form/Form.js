@@ -15,6 +15,30 @@ const Form = ({ data, inputs, submitHandler }) => {
 			{inputs.map((input, index) => {
 				const { autofocus, handler, label, name, type } = input
 				switch (type) {
+					case 'array': {
+						return (
+							input.data.length > 0 && (
+								<div className={localClasses.list} key={index}>
+									<Typography component='p' variant='h4'>
+										{label}
+									</Typography>
+									{input.data.map((item, index) => (
+										<Fragment key={index}>
+											<TextField
+												className={localClasses.input}
+												label={input.data[index].name + "'s mark"}
+												onChange={({ target: { value } }) =>
+													handler(input.data[index].id, value)
+												}
+												variant='outlined'
+											/>
+											<br />
+										</Fragment>
+									))}
+								</div>
+							)
+						)
+					}
 					case 'list': {
 						return (
 							<div className={localClasses.list} key={index}>
