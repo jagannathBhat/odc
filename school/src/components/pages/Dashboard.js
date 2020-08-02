@@ -69,7 +69,9 @@ const Dashboard = ({ history }) => {
 					</div>
 				))}
 				<div className={localClasses.button}>
-					<Button color='primary'>View All Entries</Button>
+					<Button color='primary' onClick={() => history.push('/marks/view')}>
+						View All Entries
+					</Button>
 				</div>
 			</div>
 		</div>
