@@ -9,6 +9,9 @@ export const useStyles = makeStyles(theme => ({
 		justifyContent: 'center',
 		textAlign: 'center',
 	},
+	page: {
+		margin: theme.spacing(2),
+	},
 	root: {
 		borderRadius: '0px',
 		display: 'flex',
