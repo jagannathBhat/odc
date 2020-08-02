@@ -4,6 +4,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import './App.css'
+import BatchNew from './components/pages/BatchNew'
 import Dashboard from './components/pages/Dashboard'
 import store from './store'
 import { getMode, setMode } from './actions/darkModeActions'
@@ -29,6 +30,7 @@ const App = () => {
 				<Router>
 					<Switch>
 						<Route component={Dashboard} exact path='/' />
+						<Route component={BatchNew} exact path='/batch/new' />
 					</Switch>
 				</Router>
 			</ThemeProvider>
