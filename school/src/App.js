@@ -11,6 +11,9 @@ import MarksAdd from './components/pages/MarksAdd'
 import MarksView from './components/pages/MarksView'
 import store from './store'
 import { getMode, setMode } from './actions/darkModeActions'
+import { dbSync } from './components/misc/db'
+
+dbSync()
 
 const App = () => {
 	const [darkMode, setDarkMode] = useState(getMode())

@@ -1,9 +1,10 @@
 import PouchDB from 'pouchdb'
 
 import { TEST_ADD } from './types'
+import { testDBUrl } from '../components/misc/db'
 
 // database to store all tests
-const testDB = new PouchDB('test')
+const testDB = new PouchDB(testDBUrl)
 
 // initialise database
 testDB.info()
