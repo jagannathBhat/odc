@@ -1,12 +1,19 @@
 import React, { Fragment } from 'react'
-import { Button, makeStyles, TextField, Typography } from '@material-ui/core'
+import {
+	Button,
+	makeStyles,
+	MenuItem,
+	TextField,
+	Typography,
+} from '@material-ui/core'
 
 const Form = ({ data, inputs, submitHandler }) => {
 	const localClasses = useLocalStyles()
 
 	return (
 		<>
-			{inputs.map(({ autofocus, handler, label, name, type }, index) => {
+			{inputs.map((input, index) => {
+				const { autofocus, handler, label, name, type } = input
 				switch (type) {
 					case 'list': {
 						return (
@@ -38,6 +45,29 @@ const Form = ({ data, inputs, submitHandler }) => {
 								</Button>
 								<br />
 							</div>
+						)
+					}
+					case 'select': {
+						return (
+							<Fragment key={index}>
+								<TextField
+									autoFocus={autofocus}
+									className={localClasses.input}
+									label={label}
+									name={name}
+									onChange={handler}
+									select
+									value={data[name] ? data[name] : ''}
+									variant='outlined'
+								>
+									{input.options.map((option, index) => (
+										<MenuItem key={index} value={option.value}>
+											{option.label}
+										</MenuItem>
+									))}
+								</TextField>
+								<br />
+							</Fragment>
 						)
 					}
 					default: {
@@ -73,6 +103,8 @@ const Form = ({ data, inputs, submitHandler }) => {
 const useLocalStyles = makeStyles(theme => ({
 	input: {
 		margin: theme.spacing(2) + 'px 0px',
+		maxWidth: 240,
+		width: '100%',
 	},
 	list: {
 		margin: theme.spacing(2) + 'px 0px',
