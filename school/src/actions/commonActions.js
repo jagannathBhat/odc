@@ -3,27 +3,33 @@ import PouchDB from 'pouchdb'
 import {
 	BATCH_ADD,
 	BATCH_INIT,
+	MARK_INIT,
 	STUDENT_ADD,
 	STUDENT_INIT,
 	SUBJECT_ADD,
 	SUBJECT_INIT,
-	TEST_INIT,
 } from './types'
+import {
+	batchDBUrl,
+	subjectDBUrl,
+	studentDBUrl,
+	markDBUrl,
+} from '../components/misc/db'
 
 // database to store all batches
-const batchDB = new PouchDB('batch')
+const batchDB = new PouchDB(batchDBUrl)
 // database to store all students
-const studentDB = new PouchDB('student')
+const studentDB = new PouchDB(subjectDBUrl)
 // database to store all subjects
-const subjectDB = new PouchDB('subject')
-// database to store all tests
-const testDB = new PouchDB('test')
+const subjectDB = new PouchDB(studentDBUrl)
+// database to store all marks
+const markDB = new PouchDB(markDBUrl)
 
 // initialise all databases
 batchDB.info()
 studentDB.info()
 subjectDB.info()
-testDB.info()
+markDB.info()
 
 // action to add a batch
 export const batchAdd = data => async dispatch => {
@@ -104,11 +110,11 @@ export const reducerInit = data => async dispatch => {
 			})
 		)
 
-		// fetch tests
-		testDB.allDocs({ include_docs: true, attachments: true }).then(result =>
+		// fetch marks
+		markDB.allDocs({ include_docs: true, attachments: true }).then(result =>
 			dispatch({
 				payload: result.rows.map(row => row.doc),
-				type: TEST_INIT,
+				type: MARK_INIT,
 			})
 		)
 	} catch (err) {

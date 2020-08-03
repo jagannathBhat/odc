@@ -11,7 +11,12 @@ const Form = ({ data, hideSubmit, inputs, submitHandler }) => {
 	const localClasses = useLocalStyles()
 
 	return (
-		<>
+		<form
+			onSubmit={event => {
+				event.preventDefault()
+				submitHandler()
+			}}
+		>
 			{inputs.map((input, index) => {
 				const { autofocus, handler, label, name, type } = input
 				switch (type) {
@@ -116,13 +121,13 @@ const Form = ({ data, hideSubmit, inputs, submitHandler }) => {
 				<Button
 					className={localClasses.submit}
 					color='primary'
-					onClick={submitHandler}
+					type='submit'
 					variant='contained'
 				>
 					Submit
 				</Button>
 			)}
-		</>
+		</form>
 	)
 }
 
