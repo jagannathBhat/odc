@@ -8,10 +8,11 @@ import {
 	Typography,
 } from '@material-ui/core'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const temp = [0, 1, 2, 3, 4, 5, 6]
 
-const Dashboard = ({ history, status }) => {
+const Dashboard = ({ status }) => {
 	const localClasses = useLocalStyles()
 
 	return (
@@ -24,30 +25,28 @@ const Dashboard = ({ history, status }) => {
 					District Name
 				</Typography>
 			</div>
-			<Card className={localClasses.addMarks + ' ' + localClasses.card}>
-				<CardActionArea
-					className={localClasses.cardAction}
-					onClick={() => history.push('/marks/add')}
-				>
-					<CardContent>
-						<Typography color='secondary' component='h1' variant='h5'>
-							Add Marks
-						</Typography>
-					</CardContent>
-				</CardActionArea>
-			</Card>
-			<Card className={localClasses.addBatch + ' ' + localClasses.card}>
-				<CardActionArea
-					className={localClasses.cardAction}
-					onClick={() => history.push('/batch/new')}
-				>
-					<CardContent>
-						<Typography color='secondary' component='h1' variant='h5'>
-							Add Batch
-						</Typography>
-					</CardContent>
-				</CardActionArea>
-			</Card>
+			<Link to='/marks/add'>
+				<Card className={localClasses.addMarks + ' ' + localClasses.card}>
+					<CardActionArea className={localClasses.cardAction}>
+						<CardContent>
+							<Typography color='secondary' component='h1' variant='h5'>
+								Add Marks
+							</Typography>
+						</CardContent>
+					</CardActionArea>
+				</Card>
+			</Link>
+			<Link to='/batch/new'>
+				<Card className={localClasses.addBatch + ' ' + localClasses.card}>
+					<CardActionArea className={localClasses.cardAction}>
+						<CardContent>
+							<Typography color='secondary' component='h1' variant='h5'>
+								Add Batch
+							</Typography>
+						</CardContent>
+					</CardActionArea>
+				</Card>
+			</Link>
 			<div className={localClasses.status}>
 				<Typography component='h1' variant='h5'>
 					Status
@@ -73,11 +72,9 @@ const Dashboard = ({ history, status }) => {
 						</Typography>
 					</div>
 				))}
-				<div className={localClasses.button}>
-					<Button color='primary' onClick={() => history.push('/marks/view')}>
-						View All Entries
-					</Button>
-				</div>
+				<Link className={localClasses.button} to='/marks/view'>
+					<Button color='primary'>View All Entries</Button>
+				</Link>
 			</div>
 		</div>
 	)
