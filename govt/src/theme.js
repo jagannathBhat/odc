@@ -5,9 +5,12 @@ export const useStyles = makeStyles(theme => ({
 		alignItems: 'center',
 		display: 'flex',
 		flex: 1,
-		flexDirection: 'row',
+		flexDirection: 'column',
 		justifyContent: 'center',
 		textAlign: 'center',
+	},
+	page: {
+		margin: theme.spacing(2),
 	},
 	root: {
 		borderRadius: '0px',

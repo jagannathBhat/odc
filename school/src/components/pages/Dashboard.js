@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
 	Button,
 	Card,
@@ -7,11 +7,22 @@ import {
 	makeStyles,
 	Typography,
 } from '@material-ui/core'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
+
+import { reducerInit } from '../../actions/commonActions.js'
+import { dbSync } from '../misc/db'
 
 const temp = [0, 1, 2, 3, 4, 5, 6]
 
-const Dashboard = ({ history }) => {
+const Dashboard = ({ auth, reducerInit, status }) => {
 	const localClasses = useLocalStyles()
+
+	useEffect(() => {
+		reducerInit()
+		dbSync()
+		// eslint-disable-next-line
+	}, [])
 
 	return (
 		<div className={localClasses.gridContainer}>
@@ -20,44 +31,47 @@ const Dashboard = ({ history }) => {
 					School Name
 				</Typography>
 				<Typography color='textSecondary' component='p' variant='subtitle1'>
-					District Name
+					{auth.username}. District Name
 				</Typography>
 			</div>
-			<Card className={localClasses.addMarks + ' ' + localClasses.card}>
-				<CardActionArea
-					className={localClasses.cardAction}
-					onClick={() => history.push('/marks/add')}
-				>
-					<CardContent>
-						<Typography color='secondary' component='h1' variant='h5'>
-							Add Marks
-						</Typography>
-					</CardContent>
-				</CardActionArea>
-			</Card>
-			<Card className={localClasses.addBatch + ' ' + localClasses.card}>
-				<CardActionArea
-					className={localClasses.cardAction}
-					onClick={() => history.push('/batch/new')}
-				>
-					<CardContent>
-						<Typography color='secondary' component='h1' variant='h5'>
-							Add Batch
-						</Typography>
-					</CardContent>
-				</CardActionArea>
-			</Card>
+			<Link className={localClasses.link} to='/marks/add'>
+				<Card className={localClasses.addMarks + ' ' + localClasses.card}>
+					<CardActionArea className={localClasses.cardAction}>
+						<CardContent>
+							<Typography color='secondary' component='h1' variant='h5'>
+								Add Marks
+							</Typography>
+						</CardContent>
+					</CardActionArea>
+				</Card>
+			</Link>
+			<Link className={localClasses.link} to='/batch/new'>
+				<Card className={localClasses.addBatch + ' ' + localClasses.card}>
+					<CardActionArea className={localClasses.cardAction}>
+						<CardContent>
+							<Typography color='secondary' component='h1' variant='h5'>
+								Add Batch
+							</Typography>
+						</CardContent>
+					</CardActionArea>
+				</Card>
+			</Link>
 			<div className={localClasses.status}>
 				<Typography component='h1' variant='h5'>
 					Status
 				</Typography>
-				<Typography color='textSecondary' component='p' variant='body1'>
-					Server: Offline
-					<br />
-					Saved changes
-					<br />
-					Last synced: July 23, 19:98
-				</Typography>
+				{localStorage.getItem('changes') && (
+					<>
+						<Typography color='textSecondary' component='p' variant='body1'>
+							{localStorage.getItem('changes') === 'online'
+								? 'All changes saved online'
+								: 'Some changes are offline'}
+						</Typography>
+						<Typography color='textSecondary' component='p' variant='body1'>
+							{status.message}
+						</Typography>
+					</>
+				)}
 			</div>
 			<div className={localClasses.recent}>
 				<Typography component='h1' variant='h5'>
@@ -71,11 +85,12 @@ const Dashboard = ({ history }) => {
 						</Typography>
 					</div>
 				))}
-				<div className={localClasses.button}>
-					<Button color='primary' onClick={() => history.push('/marks/view')}>
-						View All Entries
-					</Button>
-				</div>
+				<Link
+					className={localClasses.button + ' ' + localClasses.link}
+					to='/marks/view'
+				>
+					<Button color='primary'>View All Entries</Button>
+				</Link>
 			</div>
 		</div>
 	)
@@ -86,7 +101,12 @@ const useLocalStyles = makeStyles(theme => ({
 	addBatch: { gridArea: 'addBatch' },
 	addMarks: { gridArea: 'addMarks' },
 	button: { display: 'block', textAlign: 'center' },
-	card: { alignItems: 'center', display: 'flex', justifyContent: 'center' },
+	card: {
+		alignItems: 'center',
+		display: 'flex',
+		height: '100%',
+		justifyContent: 'center',
+	},
 	cardAction: { display: 'flex', flex: 1, height: '100%' },
 	gridContainer: {
 		display: 'grid',
@@ -98,9 +118,12 @@ const useLocalStyles = makeStyles(theme => ({
 		padding: theme.spacing(3),
 		width: '100%',
 	},
+	link: { textDecoration: 'none' },
 	recent: { gridArea: 'recent' },
 	status: { gridArea: 'status' },
 	title: { gridArea: 'title' },
 }))
 
-export default Dashboard
+const mapStatesToProps = state => ({ auth: state.auth, status: state.status })
+
+export default connect(mapStatesToProps, { reducerInit })(Dashboard)

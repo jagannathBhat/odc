@@ -1,31 +1,23 @@
-import PouchDB from 'pouchdb'
+import { MARK_ADD } from './types'
+import { dbPost, TYPE_MARK } from '../components/misc/db'
 
-import { TEST_ADD } from './types'
-
-// database to store all tests
-const testDB = new PouchDB('test')
-
-// initialise database
-testDB.info()
-
-// action to add a test
-export const marksAdd = data => async dispatch => {
+// action to add a mark
+export const marksAdd = ({ marks, subject, test }) => async dispatch => {
 	try {
-		testDB
-			.post({ name: data.test, subject: data.subject, marks: [...data.marks] })
-			.then(res => {
-				// add student info to student reducer
-				dispatch({
-					payload: {
-						name: data.test,
-						subject: data.subject,
-						marks: [...data.marks],
-						_id: res.id,
-						_rev: res.rev,
-					},
-					type: TEST_ADD,
-				})
+		const data = {
+			marks: [...marks],
+			name: test,
+			subject: subject,
+			type: TYPE_MARK,
+		}
+
+		dbPost(data).then(res => {
+			// add student info to student reducer
+			dispatch({
+				payload: { ...data, _id: res.id, _rev: res.rev },
+				type: MARK_ADD,
 			})
+		})
 	} catch (err) {
 		console.error(err)
 	}

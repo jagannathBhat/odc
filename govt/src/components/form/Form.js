@@ -76,23 +76,6 @@ const Form = ({ data, hideSubmit, inputs, submitHandler }) => {
 							</div>
 						)
 					}
-					case 'password': {
-						return (
-							<Fragment key={index}>
-								<TextField
-									autoFocus={autofocus}
-									className={localClasses.input}
-									label={label}
-									name={name}
-									onChange={handler}
-									type={type}
-									value={data[name] ? data[name] : ''}
-									variant='outlined'
-								/>
-								<br />
-							</Fragment>
-						)
-					}
 					case 'select': {
 						return (
 							<Fragment key={index}>
