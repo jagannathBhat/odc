@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button, makeStyles, Typography } from '@material-ui/core'
+import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import MarksView from './MarksView'
@@ -7,7 +8,7 @@ import { useStyles } from '../../theme'
 
 const temp = [1, 2, 3, 4, 5, 6, 7]
 
-const Dashboard = () => {
+const Dashboard = ({ auth }) => {
 	const localClasses = useLocalStyles()
 
 	const classes = useStyles()
@@ -19,7 +20,11 @@ const Dashboard = () => {
 					Govt. Official Name
 				</Typography>
 				<Typography component='p' variant='subtitle1'>
-					Block/District/State Level
+					{auth.username.startsWith('s')
+						? 'State Level'
+						: auth.username.startsWith('d')
+						? 'District Level'
+						: 'Block Level'}
 				</Typography>
 			</div>
 			<div className={localClasses.col}>
@@ -57,4 +62,6 @@ const useLocalStyles = makeStyles(theme => ({
 	root: { width: '100%' },
 }))
 
-export default Dashboard
+const mapStatesToProps = state => ({ auth: state.auth })
+
+export default connect(mapStatesToProps)(Dashboard)
