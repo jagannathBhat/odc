@@ -1,3 +1,5 @@
+export const AUTH_UPDATE = 'AUTH_UPDATE'
+
 export const BATCH_INIT = 'BATCH_INIT'
 
 export const MARK_INIT = 'MARK_INIT'

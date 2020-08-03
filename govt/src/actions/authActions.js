@@ -1,11 +1,8 @@
-import { UPDATE_AUTH } from './types'
+import { AUTH_UPDATE } from './types'
 
-export const someAction = data => async dispatch => {
+export const authUpdate = data => async dispatch => {
 	try {
-		dispatch({
-			type: UPDATE_AUTH,
-			// payload: data
-		})
+		dispatch({ payload: data, type: AUTH_UPDATE })
 	} catch (err) {
 		console.error(err)
 	}

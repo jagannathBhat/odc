@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
 	Button,
 	Card,
@@ -10,10 +10,19 @@ import {
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
+import { reducerInit } from '../../actions/commonActions.js'
+import { dbSync } from '../misc/db'
+
 const temp = [0, 1, 2, 3, 4, 5, 6]
 
-const Dashboard = ({ status }) => {
+const Dashboard = ({ auth, reducerInit, status }) => {
 	const localClasses = useLocalStyles()
+
+	useEffect(() => {
+		reducerInit()
+		dbSync()
+		// eslint-disable-next-line
+	}, [])
 
 	return (
 		<div className={localClasses.gridContainer}>
@@ -22,7 +31,7 @@ const Dashboard = ({ status }) => {
 					School Name
 				</Typography>
 				<Typography color='textSecondary' component='p' variant='subtitle1'>
-					District Name
+					{auth.username}. District Name
 				</Typography>
 			</div>
 			<Link className={localClasses.link} to='/marks/add'>
@@ -51,14 +60,18 @@ const Dashboard = ({ status }) => {
 				<Typography component='h1' variant='h5'>
 					Status
 				</Typography>
-				<Typography color='textSecondary' component='p' variant='body1'>
-					{status.map(item => (
-						<>
-							{item}
-							<br />
-						</>
-					))}
-				</Typography>
+				{localStorage.getItem('changes') && (
+					<>
+						<Typography color='textSecondary' component='p' variant='body1'>
+							{localStorage.getItem('changes') === 'online'
+								? 'All changes saved online'
+								: 'Some changes are offline'}
+						</Typography>
+						<Typography color='textSecondary' component='p' variant='body1'>
+							{status.message}
+						</Typography>
+					</>
+				)}
 			</div>
 			<div className={localClasses.recent}>
 				<Typography component='h1' variant='h5'>
@@ -111,6 +124,6 @@ const useLocalStyles = makeStyles(theme => ({
 	title: { gridArea: 'title' },
 }))
 
-const mapStatesToProps = state => ({ status: state.status })
+const mapStatesToProps = state => ({ auth: state.auth, status: state.status })
 
-export default connect(mapStatesToProps)(Dashboard)
+export default connect(mapStatesToProps, { reducerInit })(Dashboard)
