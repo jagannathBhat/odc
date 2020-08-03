@@ -7,7 +7,7 @@ import {
 	Typography,
 } from '@material-ui/core'
 
-const Form = ({ data, inputs, submitHandler }) => {
+const Form = ({ data, hideSubmit, inputs, submitHandler }) => {
 	const localClasses = useLocalStyles()
 
 	return (
@@ -15,10 +15,34 @@ const Form = ({ data, inputs, submitHandler }) => {
 			{inputs.map((input, index) => {
 				const { autofocus, handler, label, name, type } = input
 				switch (type) {
+					case 'array': {
+						return (
+							input.data.length > 0 && (
+								<div className={localClasses.list} key={index}>
+									<Typography component='p' variant='h5'>
+										{label}
+									</Typography>
+									{input.data.map((item, index) => (
+										<Fragment key={index}>
+											<TextField
+												className={localClasses.input}
+												label={input.data[index].name + "'s mark"}
+												onChange={({ target: { value } }) =>
+													handler(input.data[index].id, value)
+												}
+												variant='outlined'
+											/>
+											<br />
+										</Fragment>
+									))}
+								</div>
+							)
+						)
+					}
 					case 'list': {
 						return (
 							<div className={localClasses.list} key={index}>
-								<Typography component='p' variant='h4'>
+								<Typography component='p' variant='h5'>
 									{label}
 								</Typography>
 								{data[name] &&
@@ -88,14 +112,16 @@ const Form = ({ data, inputs, submitHandler }) => {
 					}
 				}
 			})}
-			<Button
-				className={localClasses.submit}
-				color='primary'
-				onClick={submitHandler}
-				variant='contained'
-			>
-				Submit
-			</Button>
+			{!hideSubmit && (
+				<Button
+					className={localClasses.submit}
+					color='primary'
+					onClick={submitHandler}
+					variant='contained'
+				>
+					Submit
+				</Button>
+			)}
 		</>
 	)
 }

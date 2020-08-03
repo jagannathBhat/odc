@@ -5,11 +5,11 @@ import { withRouter } from 'react-router-dom'
 
 import BackButton from '../misc/BackButton.js'
 import Form from '../form/Form.js'
-import MarkList from '../mark/MarkList.js'
+import { marksAdd } from '../../actions/marksActions.js'
 import { useStyles } from '../../theme'
 
-const MarksView = ({ batch, history, mark, subject }) => {
-	const [data, setData] = useState({})
+const MarksAdd = ({ batch, history, subject, student, marksAdd }) => {
+	const [data, setData] = useState({ marks: [] })
 
 	const classes = useStyles()
 
@@ -17,6 +17,23 @@ const MarksView = ({ batch, history, mark, subject }) => {
 
 	const inputHandler = ({ target: { name, value } }) =>
 		setData({ ...data, [name]: value })
+
+	const markHandler = (id, value) => {
+		const copyData = { ...data }
+		let flag = true
+		for (let i in copyData.marks)
+			if (copyData.marks[i].student === id) {
+				copyData.marks[i].mark = value
+				flag = false
+			}
+		if (flag) copyData.marks.push({ student: id, mark: value })
+		setData(copyData)
+	}
+
+	const submitHandler = () => {
+		marksAdd(data)
+		history.push('/')
+	}
 
 	const inputs = [
 		{
@@ -40,14 +57,17 @@ const MarksView = ({ batch, history, mark, subject }) => {
 		},
 		{
 			handler: inputHandler,
-			label: 'Select Test/Assignment',
+			label: 'Test/Assignment Name',
 			name: 'test',
-			options: data.subject
-				? mark
-						.filter(item => item.subject === data.subject)
-						.map(item => ({ label: item.name, value: item._id }))
-				: [],
-			type: 'select',
+		},
+		{
+			data: student
+				.filter(item => item.batch === data.batch)
+				.map(item => ({ id: item._id, name: item.name })),
+			handler: markHandler,
+			label: 'Enter Marks',
+			name: 'marks',
+			type: 'array',
 		},
 	]
 
@@ -55,22 +75,17 @@ const MarksView = ({ batch, history, mark, subject }) => {
 		<div className={classes.page}>
 			<BackButton className={localClasses.backButton} history={history} />
 			<Typography component='h1' variant='h4'>
-				View Marks
+				Add Marks
 			</Typography>
-			<Form
-				data={data}
-				hideSubmit={true}
-				inputs={inputs}
-			/>
-			<MarkList id={data.test} />
+			<Form data={data} inputs={inputs} submitHandler={submitHandler} />
 		</div>
 	)
 }
 
 const mapStatesToProps = state => ({
 	batch: state.batch,
+	student: state.student,
 	subject: state.subject,
-	mark: state.mark,
 })
 
 const useLocalStyles = makeStyles(theme => ({
@@ -79,4 +94,4 @@ const useLocalStyles = makeStyles(theme => ({
 	},
 }))
 
-export default connect(mapStatesToProps)(withRouter(MarksView))
+export default connect(mapStatesToProps, { marksAdd })(withRouter(MarksAdd))

@@ -7,10 +7,12 @@ import {
 	makeStyles,
 	Typography,
 } from '@material-ui/core'
+import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const temp = [0, 1, 2, 3, 4, 5, 6]
 
-const Dashboard = ({ history }) => {
+const Dashboard = ({ status }) => {
 	const localClasses = useLocalStyles()
 
 	return (
@@ -23,37 +25,39 @@ const Dashboard = ({ history }) => {
 					District Name
 				</Typography>
 			</div>
-			<Card className={localClasses.addMarks + ' ' + localClasses.card}>
-				<CardActionArea className={localClasses.cardAction}>
-					<CardContent>
-						<Typography color='secondary' component='h1' variant='h5'>
-							Add Marks
-						</Typography>
-					</CardContent>
-				</CardActionArea>
-			</Card>
-			<Card className={localClasses.addBatch + ' ' + localClasses.card}>
-				<CardActionArea
-					className={localClasses.cardAction}
-					onClick={() => history.push('/batch/new')}
-				>
-					<CardContent>
-						<Typography color='secondary' component='h1' variant='h5'>
-							Add Batch
-						</Typography>
-					</CardContent>
-				</CardActionArea>
-			</Card>
+			<Link to='/marks/add'>
+				<Card className={localClasses.addMarks + ' ' + localClasses.card}>
+					<CardActionArea className={localClasses.cardAction}>
+						<CardContent>
+							<Typography color='secondary' component='h1' variant='h5'>
+								Add Marks
+							</Typography>
+						</CardContent>
+					</CardActionArea>
+				</Card>
+			</Link>
+			<Link to='/batch/new'>
+				<Card className={localClasses.addBatch + ' ' + localClasses.card}>
+					<CardActionArea className={localClasses.cardAction}>
+						<CardContent>
+							<Typography color='secondary' component='h1' variant='h5'>
+								Add Batch
+							</Typography>
+						</CardContent>
+					</CardActionArea>
+				</Card>
+			</Link>
 			<div className={localClasses.status}>
 				<Typography component='h1' variant='h5'>
 					Status
 				</Typography>
 				<Typography color='textSecondary' component='p' variant='body1'>
-					Server: Offline
-					<br />
-					Saved changes
-					<br />
-					Last synced: July 23, 19:98
+					{status.map(item => (
+						<>
+							{item}
+							<br />
+						</>
+					))}
 				</Typography>
 			</div>
 			<div className={localClasses.recent}>
@@ -68,11 +72,9 @@ const Dashboard = ({ history }) => {
 						</Typography>
 					</div>
 				))}
-				<div className={localClasses.button}>
-					<Button color='primary' onClick={() => history.push('/marks/view')}>
-						View All Entries
-					</Button>
-				</div>
+				<Link className={localClasses.button} to='/marks/view'>
+					<Button color='primary'>View All Entries</Button>
+				</Link>
 			</div>
 		</div>
 	)
@@ -100,4 +102,6 @@ const useLocalStyles = makeStyles(theme => ({
 	title: { gridArea: 'title' },
 }))
 
-export default Dashboard
+const mapStatesToProps = state => ({ status: state.status })
+
+export default connect(mapStatesToProps)(Dashboard)
