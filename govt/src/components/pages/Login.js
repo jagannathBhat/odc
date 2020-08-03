@@ -1,19 +1,27 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Typography } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 
 import Form from '../form/Form'
 import { authUpdate } from '../../actions/authActions'
+import { reducerInit } from '../../actions/commonActions'
 import { useStyles } from '../../theme'
+import { dbSync } from '../misc/db'
 
-const Login = ({ authUpdate, history }) => {
+const Login = ({ authUpdate, history, reducerInit }) => {
 	const [data, setData] = useState({})
 
 	const classes = useStyles()
 
 	const inputHandler = ({ target: { name, value } }) =>
 		setData({ ...data, [name]: value })
+
+	useEffect(() => {
+		dbSync()
+		reducerInit()
+		// eslint-disable-next-line
+	}, [])
 
 	const inputs = [
 		{
@@ -45,4 +53,4 @@ const Login = ({ authUpdate, history }) => {
 	)
 }
 
-export default connect(null, { authUpdate })(withRouter(Login))
+export default connect(null, { authUpdate, reducerInit })(withRouter(Login))

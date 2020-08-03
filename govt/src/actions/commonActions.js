@@ -1,62 +1,125 @@
-import PouchDB from 'pouchdb'
-
-import { BATCH_INIT, MARK_INIT, STUDENT_INIT, SUBJECT_INIT } from './types'
 import {
-	batchDBUrl,
-	subjectDBUrl,
-	studentDBUrl,
-	markDBUrl,
+	AUTH_UPDATE,
+	BATCH_INIT,
+	MARK_INIT,
+	STUDENT_INIT,
+	SUBJECT_INIT,
+	USER_ADD,
+	USER_INIT,
+} from './types'
+import {
+	dbAllDocs,
+	dbPost,
+	dbSync,
+	getUserType,
+	TYPE_BATCH,
+	TYPE_SCHOOL,
+	TYPE_STUDENT,
+	TYPE_SUBJECT,
+	TYPE_MARK,
 } from '../components/misc/db'
+import store from '../store'
 
-// database to store all batches
-const batchDB = new PouchDB(batchDBUrl)
-// database to store all students
-const studentDB = new PouchDB(subjectDBUrl)
-// database to store all subjects
-const subjectDB = new PouchDB(studentDBUrl)
-// database to store all marks
-const markDB = new PouchDB(markDBUrl)
+// exit the dashboard to login
+const exitApp = () => window.location.assign('/')
 
-// initialise all databases
-batchDB.info()
-studentDB.info()
-subjectDB.info()
-markDB.info()
+// find all schools that come under an account
+const findSchools = (accounts, docs) => {
+	if (accounts.length === 0) return []
 
-// fetch all data to initialise the reducers
-export const reducerInit = data => async dispatch => {
+	const user = findUser(docs, accounts.shift())
+	if (user) {
+		if (user.type === TYPE_SCHOOL) {
+			accounts.unshift(user.username)
+			return accounts
+		}
+		accounts.push(...user.accounts)
+	}
+
+	return findSchools(accounts, docs)
+}
+
+// find user doc with username
+const findUser = (docs, username) => {
+	for (let i in docs) if (docs[i].username === username) return docs[i]
+	return null
+}
+
+// fetch all data to initialise user reducer
+export const reducerInit = () => async dispatch => {
 	try {
-		// fetch batches
-		batchDB.allDocs({ include_docs: true, attachments: true }).then(result =>
-			dispatch({
-				payload: result.rows.map(row => row.doc),
-				type: BATCH_INIT,
-			})
+		// fetch and store data
+		dbAllDocs({ attachments: true, include_docs: true }).then(({ rows }) =>
+			dispatch({ payload: rows.map(row => row.doc), type: USER_INIT })
 		)
+	} catch (err) {
+		console.error(err)
+	}
+}
 
-		// fetch students
-		studentDB.allDocs({ include_docs: true, attachments: true }).then(result =>
-			dispatch({
-				payload: result.rows.map(row => row.doc),
-				type: STUDENT_INIT,
-			})
-		)
+// fetch all data to initialise the school reducers
+const schoolReducerInit = (dispatch, school) => {
+	try {
+		console.log(school)
+		// reducers for school data
+		const reducers = [
+			{ action: BATCH_INIT, type: TYPE_BATCH },
+			{ action: MARK_INIT, type: TYPE_MARK },
+			{ action: STUDENT_INIT, type: TYPE_STUDENT },
+			{ action: SUBJECT_INIT, type: TYPE_SUBJECT },
+		]
 
-		// fetch subjects
-		subjectDB.allDocs({ include_docs: true, attachments: true }).then(result =>
-			dispatch({
-				payload: result.rows.map(row => row.doc),
-				type: SUBJECT_INIT,
-			})
+		// fetch and store data
+		dbAllDocs({ attachments: true, include_docs: true }, school).then(
+			result => {
+				console.log(result)
+				for (let i in reducers) {
+					const payload = result.rows
+						.filter(row => row.doc.type === reducers[i].type)
+						.map(row => row.doc)
+					dispatch({ payload, type: reducers[i].action })
+				}
+			}
 		)
+	} catch (err) {
+		console.error(err)
+	}
+}
 
-		// fetch marks
-		markDB.allDocs({ include_docs: true, attachments: true }).then(result =>
-			dispatch({
-				payload: result.rows.map(row => row.doc),
-				type: MARK_INIT,
-			})
-		)
+// function to initialise user info
+export const userInit = () => async dispatch => {
+	try {
+		const username = store.getState().auth.username
+		if (getUserType(username) === TYPE_SCHOOL) exitApp()
+
+		const docs = store.getState().user
+		const user = findUser(docs, username)
+
+		if (user) {
+			dispatch({ payload: { user }, type: AUTH_UPDATE })
+			const schools = findSchools([...user.accounts], docs)
+			for (let i in schools) {
+				schoolReducerInit(dispatch, schools[i])
+				dbSync(schools[i])
+			}
+			return
+		}
+
+		for (let i in docs)
+			if (docs[i].accounts.includes(username)) {
+				let data = {
+					accounts: [],
+					type: getUserType(username),
+					username,
+				}
+
+				const result = await dbPost(data)
+				data = { ...data, _id: result.id, _rev: result.rev }
+				dispatch({ payload: data, type: USER_ADD })
+				dispatch({ payload: { user: data }, type: AUTH_UPDATE })
+				return
+			}
+		exitApp()
 	} catch (err) {
 		console.error(err)
 	}

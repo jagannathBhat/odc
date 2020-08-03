@@ -108,6 +108,7 @@ const Form = ({ data, hideSubmit, inputs, submitHandler }) => {
 									label={label}
 									name={name}
 									onChange={handler}
+									type={type}
 									value={data[name] ? data[name] : ''}
 									variant='outlined'
 								/>

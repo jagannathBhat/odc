@@ -7,45 +7,72 @@ const activeHandler = () => {
 	store.dispatch({ type: STATUS_UPDATE, payload: 'active' })
 	console.log('active')
 }
+
 const changeHandler = info => {
 	store.dispatch({ type: STATUS_UPDATE, payload: 'change' })
 	console.log('change', info)
 }
+
 const completeHandler = info => {
 	store.dispatch({ type: STATUS_UPDATE, payload: 'complete' })
 	console.log('complete', info)
 }
+
+const DB_URL = 'users'
+
 const deniedHandler = info => {
 	store.dispatch({ type: STATUS_UPDATE, payload: 'denied' })
 	console.log('denied', info)
 }
+
 const errorHandler = info => {
 	store.dispatch({ type: STATUS_UPDATE, payload: 'error' })
 	console.log('error', info)
 }
+
 const pausedHandler = info => {
 	store.dispatch({ type: STATUS_UPDATE, payload: 'pause' })
 	console.log('pause', info)
 }
 
-// database to store all batched
-export const batchDBUrl = 'batch'
+// document types
+export const TYPE_BATCH = 'batch'
+export const TYPE_BLOCK = 'block'
+export const TYPE_DISTRICT = 'district'
+export const TYPE_SCHOOL = 'school'
+export const TYPE_STATE = 'state'
+export const TYPE_STUDENT = 'student'
+export const TYPE_SUBJECT = 'subject'
+export const TYPE_MARK = 'mark'
 
-// database to store all students
-export const studentDBUrl = 'student'
+// function to fetch all docs
+export const dbAllDocs = (options, url = DB_URL) => {
+	const db = new PouchDB(url)
+	db.info()
+	return db.allDocs(options)
+}
 
-// database to store all subjects
-export const subjectDBUrl = 'subject'
+// function to add a new document
+export const dbPost = data => {
+	const db = new PouchDB(DB_URL)
+	db.info()
+	localStorage.setItem('changes', 'offline')
+	return db.post(data)
+}
 
-// database to store all marks
-export const markDBUrl = 'mark'
+// function to add/modify a document
+export const dbPut = data => {
+	const db = new PouchDB(DB_URL)
+	db.info()
+	localStorage.setItem('changes', 'offline')
+	return db.put(data)
+}
 
 // function to sync all databases
-export const dbSync = () => {
-	PouchDB.sync(batchDBUrl, 'http://localhost:5984/' + batchDBUrl, {
-		live: true,
-		retry: true,
-	})
+export const dbSync = (url = DB_URL) => {
+	const db = new PouchDB(url)
+	db.info()
+	db.sync('http://192.168.43.124:5984/' + DB_URL, { live: true, retry: true })
 		// replicate resumed (e.g. new changes replicating, user went back online)
 		.on('active', activeHandler)
 		// handle change
@@ -58,37 +85,17 @@ export const dbSync = () => {
 		.on('error', errorHandler)
 		// replication paused (e.g. replication up to date, user went offline)
 		.on('paused', pausedHandler)
+}
 
-	PouchDB.sync(studentDBUrl, 'http://localhost:5984/' + studentDBUrl, {
-		live: true,
-		retry: true,
-	})
-		.on('active', activeHandler)
-		.on('change', changeHandler)
-		.on('complete', completeHandler)
-		.on('denied', deniedHandler)
-		.on('error', errorHandler)
-		.on('paused', pausedHandler)
-
-	PouchDB.sync(subjectDBUrl, 'http://localhost:5984/' + subjectDBUrl, {
-		live: true,
-		retry: true,
-	})
-		.on('active', activeHandler)
-		.on('change', changeHandler)
-		.on('complete', completeHandler)
-		.on('denied', deniedHandler)
-		.on('error', errorHandler)
-		.on('paused', pausedHandler)
-
-	PouchDB.sync(markDBUrl, 'http://localhost:5984/' + markDBUrl, {
-		live: true,
-		retry: true,
-	})
-		.on('active', activeHandler)
-		.on('change', changeHandler)
-		.on('complete', completeHandler)
-		.on('denied', deniedHandler)
-		.on('error', errorHandler)
-		.on('paused', pausedHandler)
+// function to determine the type of user
+export const getUserType = name => {
+	if (name === 'state') return TYPE_STATE
+	switch (name[0]) {
+		case 'b':
+			return TYPE_BLOCK
+		case 's':
+			return TYPE_SCHOOL
+		default:
+			return TYPE_DISTRICT
+	}
 }

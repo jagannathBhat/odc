@@ -6,6 +6,7 @@ import markReducer from './markReducer'
 import statusReducer from './statusReducer'
 import studentReducer from './studentReducer'
 import subjectReducer from './subjectReducer'
+import userReducer from './userReducer'
 
 export default combineReducers({
 	auth: authReducer,
@@ -14,4 +15,5 @@ export default combineReducers({
 	status: statusReducer,
 	student: studentReducer,
 	subject: subjectReducer,
+	user: userReducer,
 })
