@@ -25,7 +25,7 @@ const Dashboard = ({ status }) => {
 					District Name
 				</Typography>
 			</div>
-			<Link to='/marks/add'>
+			<Link className={localClasses.link} to='/marks/add'>
 				<Card className={localClasses.addMarks + ' ' + localClasses.card}>
 					<CardActionArea className={localClasses.cardAction}>
 						<CardContent>
@@ -36,7 +36,7 @@ const Dashboard = ({ status }) => {
 					</CardActionArea>
 				</Card>
 			</Link>
-			<Link to='/batch/new'>
+			<Link className={localClasses.link} to='/batch/new'>
 				<Card className={localClasses.addBatch + ' ' + localClasses.card}>
 					<CardActionArea className={localClasses.cardAction}>
 						<CardContent>
@@ -72,7 +72,10 @@ const Dashboard = ({ status }) => {
 						</Typography>
 					</div>
 				))}
-				<Link className={localClasses.button} to='/marks/view'>
+				<Link
+					className={localClasses.button + ' ' + localClasses.link}
+					to='/marks/view'
+				>
 					<Button color='primary'>View All Entries</Button>
 				</Link>
 			</div>
@@ -85,7 +88,12 @@ const useLocalStyles = makeStyles(theme => ({
 	addBatch: { gridArea: 'addBatch' },
 	addMarks: { gridArea: 'addMarks' },
 	button: { display: 'block', textAlign: 'center' },
-	card: { alignItems: 'center', display: 'flex', justifyContent: 'center' },
+	card: {
+		alignItems: 'center',
+		display: 'flex',
+		height: '100%',
+		justifyContent: 'center',
+	},
 	cardAction: { display: 'flex', flex: 1, height: '100%' },
 	gridContainer: {
 		display: 'grid',
@@ -97,6 +105,7 @@ const useLocalStyles = makeStyles(theme => ({
 		padding: theme.spacing(3),
 		width: '100%',
 	},
+	link: { textDecoration: 'none' },
 	recent: { gridArea: 'recent' },
 	status: { gridArea: 'status' },
 	title: { gridArea: 'title' },

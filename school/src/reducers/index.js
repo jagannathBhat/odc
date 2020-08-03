@@ -1,5 +1,6 @@
 import { combineReducers } from 'redux'
 
+import authReducer from './authReducer'
 import batchReducer from './batchReducer'
 import markReducer from './markReducer'
 import statusReducer from './statusReducer'
@@ -7,6 +8,7 @@ import studentReducer from './studentReducer'
 import subjectReducer from './subjectReducer'
 
 export default combineReducers({
+	auth: authReducer,
 	batch: batchReducer,
 	mark: markReducer,
 	status: statusReducer,
