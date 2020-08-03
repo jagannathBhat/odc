@@ -16,8 +16,8 @@ export const studentDBUrl = 'student'
 // database to store all subjects
 export const subjectDBUrl = 'subject'
 
-// database to store all tests
-export const testDBUrl = 'test'
+// database to store all marks
+export const markDBUrl = 'mark'
 
 // function to sync all databases
 export const dbSync = () => {
@@ -60,7 +60,7 @@ export const dbSync = () => {
 		.on('error', errorHandler)
 		.on('paused', pausedHandler)
 
-	PouchDB.sync(testDBUrl, 'http://localhost:5984/' + testDBUrl, {
+	PouchDB.sync(markDBUrl, 'http://localhost:5984/' + markDBUrl, {
 		live: true,
 		retry: true,
 	})
