@@ -12,4 +12,5 @@ export const STUDENT_INIT = 'STUDENT_INIT'
 
 export const SUBJECT_INIT = 'SUBJECT_INIT'
 
+export const USER_ADD = 'USER_ADD'
 export const USER_INIT = 'USER_INIT'

@@ -1,4 +1,4 @@
-import { ACC_ADD, USER_INIT } from '../actions/types'
+import { ACC_ADD, USER_ADD, USER_INIT } from '../actions/types'
 
 const initialState = []
 
@@ -12,6 +12,8 @@ export default (state = initialState, { payload, type }) => {
 				}),
 			]
 		}
+		case USER_ADD:
+			return [...state, payload]
 		case USER_INIT:
 			return payload
 		default:
