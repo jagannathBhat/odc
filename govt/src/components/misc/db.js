@@ -46,8 +46,8 @@ export const TYPE_SUBJECT = 'subject'
 export const TYPE_MARK = 'mark'
 
 // function to fetch all docs
-export const dbAllDocs = options => {
-	const db = new PouchDB(DB_URL)
+export const dbAllDocs = (options, url = DB_URL) => {
+	const db = new PouchDB(url)
 	db.info()
 	return db.allDocs(options)
 }
@@ -69,10 +69,10 @@ export const dbPut = data => {
 }
 
 // function to sync all databases
-export const dbSync = () => {
-	const db = new PouchDB(DB_URL)
+export const dbSync = (url = DB_URL) => {
+	const db = new PouchDB(url)
 	db.info()
-	db.sync('http://localhost:5984/' + DB_URL, { live: true, retry: true })
+	db.sync('http://192.168.43.124:5984/' + DB_URL, { live: true, retry: true })
 		// replicate resumed (e.g. new changes replicating, user went back online)
 		.on('active', activeHandler)
 		// handle change
