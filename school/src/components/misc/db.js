@@ -59,7 +59,7 @@ export const dbSync = () => {
 	const dbUrl = store.getState('auth').auth.username
 	const db = new PouchDB(store.getState('auth').auth.username)
 	db.info()
-	db.sync('http://localhost:5984/' + dbUrl, { live: true, retry: true })
+	db.sync('http://192.168.43.124:5984/' + dbUrl, { live: true, retry: true })
 		// replicate resumed (e.g. new changes replicating, user went back online)
 		.on('active', activeHandler)
 		// handle change
