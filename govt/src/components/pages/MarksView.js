@@ -1,28 +1,15 @@
 import React, { useState } from 'react'
-import { makeStyles, Typography } from '@material-ui/core'
+import { Typography } from '@material-ui/core'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
 
-import BackButton from '../misc/BackButton.js'
 import Form from '../form/Form.js'
-import MarkList from '../test/MarkList.js'
-import { batchAdd } from '../../actions/commonActions.js'
-import { useStyles } from '../../theme'
+import MarkList from '../mark/MarkList.js'
 
-const MarksView = ({ batch, batchAdd, history, subject, test }) => {
+const MarksView = ({ batch, mark, subject }) => {
 	const [data, setData] = useState({})
-
-	const classes = useStyles()
-
-	const localClasses = useLocalStyles()
 
 	const inputHandler = ({ target: { name, value } }) =>
 		setData({ ...data, [name]: value })
-
-	const submitHandler = () => {
-		batchAdd(data)
-		history.push('/')
-	}
 
 	const inputs = [
 		{
@@ -49,7 +36,7 @@ const MarksView = ({ batch, batchAdd, history, subject, test }) => {
 			label: 'Select Test/Assignment',
 			name: 'test',
 			options: data.subject
-				? test
+				? mark
 						.filter(item => item.subject === data.subject)
 						.map(item => ({ label: item.name, value: item._id }))
 				: [],
@@ -58,32 +45,20 @@ const MarksView = ({ batch, batchAdd, history, subject, test }) => {
 	]
 
 	return (
-		<div className={classes.page}>
-			<BackButton className={localClasses.backButton} history={history} />
-			<Typography component='h1' variant='h4'>
+		<>
+			<Typography component='h1' variant='h5'>
 				View Marks
 			</Typography>
-			<Form
-				data={data}
-				hideSubmit={true}
-				inputs={inputs}
-				submitHandler={submitHandler}
-			/>
+			<Form data={data} hideSubmit={true} inputs={inputs} />
 			<MarkList id={data.test} />
-		</div>
+		</>
 	)
 }
 
 const mapStatesToProps = state => ({
 	batch: state.batch,
 	subject: state.subject,
-	test: state.test,
+	mark: state.mark,
 })
 
-const useLocalStyles = makeStyles(theme => ({
-	backButton: {
-		margin: theme.spacing(3) + 'px 0px',
-	},
-}))
-
-export default connect(mapStatesToProps, { batchAdd })(withRouter(MarksView))
+export default connect(mapStatesToProps)(MarksView)

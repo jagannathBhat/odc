@@ -9,15 +9,21 @@ import {
 	SUBJECT_INIT,
 	TEST_INIT,
 } from './types'
+import {
+	batchDBUrl,
+	subjectDBUrl,
+	studentDBUrl,
+	testDBUrl,
+} from '../components/misc/db'
 
 // database to store all batches
-const batchDB = new PouchDB('batch')
+const batchDB = new PouchDB(batchDBUrl)
 // database to store all students
-const studentDB = new PouchDB('student')
+const studentDB = new PouchDB(subjectDBUrl)
 // database to store all subjects
-const subjectDB = new PouchDB('subject')
+const subjectDB = new PouchDB(studentDBUrl)
 // database to store all tests
-const testDB = new PouchDB('test')
+const testDB = new PouchDB(testDBUrl)
 
 // initialise all databases
 batchDB.info()
