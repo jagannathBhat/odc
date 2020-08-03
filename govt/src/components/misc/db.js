@@ -39,6 +39,7 @@ const pausedHandler = info => {
 export const TYPE_BATCH = 'batch'
 export const TYPE_BLOCK = 'block'
 export const TYPE_DISTRICT = 'district'
+export const TYPE_SCHOOL = 'school'
 export const TYPE_STATE = 'state'
 export const TYPE_STUDENT = 'student'
 export const TYPE_SUBJECT = 'subject'
@@ -88,14 +89,13 @@ export const dbSync = () => {
 
 // function to determine the type of user
 export const getUserType = name => {
+	if (name === 'state') return TYPE_STATE
 	switch (name[0]) {
 		case 'b':
 			return TYPE_BLOCK
-		case 'd':
-			return TYPE_DISTRICT
 		case 's':
-			return TYPE_STATE
+			return TYPE_SCHOOL
 		default:
-			return null
+			return TYPE_DISTRICT
 	}
 }

@@ -4,14 +4,13 @@ import { connect } from 'react-redux'
 
 import Form from '../form/Form.js'
 import MarksView from './MarksView'
-import { reducerInit } from '../../actions/commonActions.js'
+import { userInit } from '../../actions/commonActions.js'
 import { userAdd } from '../../actions/userActions.js'
 import { useStyles } from '../../theme'
-import { dbSync } from '../misc/db'
 
 const temp = [1, 2, 3, 4, 5, 6, 7]
 
-const Dashboard = ({ auth, reducerInit, userAdd }) => {
+const Dashboard = ({ auth, userInit, userAdd }) => {
 	const [data, setData] = useState({})
 
 	const classes = useStyles()
@@ -27,8 +26,7 @@ const Dashboard = ({ auth, reducerInit, userAdd }) => {
 	}
 
 	useEffect(() => {
-		reducerInit()
-		dbSync()
+		userInit()
 		// eslint-disable-next-line
 	}, [])
 
@@ -50,9 +48,9 @@ const Dashboard = ({ auth, reducerInit, userAdd }) => {
 				<Typography component='p' variant='subtitle1'>
 					{auth.username.startsWith('s')
 						? 'State Level'
-						: auth.username.startsWith('d')
-						? 'District Level'
-						: 'Block Level'}
+						: auth.username.startsWith('b')
+						? 'Block Level'
+						: 'District Level'}
 				</Typography>
 			</div>
 			<div className={localClasses.col}>
@@ -99,4 +97,4 @@ const useLocalStyles = makeStyles(theme => ({
 
 const mapStatesToProps = state => ({ auth: state.auth })
 
-export default connect(mapStatesToProps, { reducerInit, userAdd })(Dashboard)
+export default connect(mapStatesToProps, { userInit, userAdd })(Dashboard)
