@@ -1,11 +1,32 @@
 import PouchDB from 'pouchdb'
 
-const activeHandler = info => console.log('active')
-const changeHandler = info => console.log('change', info)
-const completeHandler = info => console.log('complete', info)
-const deniedHandler = info => console.log('denied', info)
-const errorHandler = info => console.log('error', info)
-const pausedHandler = info => console.log('pause', info)
+import store from '../../store'
+import { STATUS_PAUSE, STATUS_UPDATE } from '../../actions/types'
+
+const activeHandler = () => {
+	store.dispatch({ type: STATUS_UPDATE, payload: 'active' })
+	console.log('active')
+}
+const changeHandler = info => {
+	store.dispatch({ type: STATUS_UPDATE, payload: 'change' })
+	console.log('change', info)
+}
+const completeHandler = info => {
+	store.dispatch({ type: STATUS_UPDATE, payload: 'complete' })
+	console.log('complete', info)
+}
+const deniedHandler = info => {
+	store.dispatch({ type: STATUS_UPDATE, payload: 'denied' })
+	console.log('denied', info)
+}
+const errorHandler = info => {
+	store.dispatch({ type: STATUS_UPDATE, payload: 'error' })
+	console.log('error', info)
+}
+const pausedHandler = info => {
+	store.dispatch({ type: STATUS_UPDATE, payload: 'pause' })
+	console.log('pause', info)
+}
 
 // database to store all batched
 export const batchDBUrl = 'batch'
