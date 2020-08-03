@@ -1,17 +1,25 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, makeStyles, Typography } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 
 import MarksView from './MarksView'
+import { reducerInit } from '../../actions/commonActions.js'
 import { useStyles } from '../../theme'
+import { dbSync } from '../misc/db'
 
 const temp = [1, 2, 3, 4, 5, 6, 7]
 
-const Dashboard = ({ auth }) => {
+const Dashboard = ({ auth, reducerInit }) => {
 	const localClasses = useLocalStyles()
 
 	const classes = useStyles()
+
+	useEffect(() => {
+		reducerInit()
+		dbSync()
+		// eslint-disable-next-line
+	}, [])
 
 	return (
 		<div className={classes.page + ' ' + localClasses.root}>
@@ -64,4 +72,4 @@ const useLocalStyles = makeStyles(theme => ({
 
 const mapStatesToProps = state => ({ auth: state.auth })
 
-export default connect(mapStatesToProps)(Dashboard)
+export default connect(mapStatesToProps, { reducerInit })(Dashboard)
