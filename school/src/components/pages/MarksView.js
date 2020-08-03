@@ -5,11 +5,11 @@ import { withRouter } from 'react-router-dom'
 
 import BackButton from '../misc/BackButton.js'
 import Form from '../form/Form.js'
-import MarkList from '../test/MarkList.js'
+import MarkList from '../mark/MarkList.js'
 import { batchAdd } from '../../actions/commonActions.js'
 import { useStyles } from '../../theme'
 
-const MarksView = ({ batch, batchAdd, history, subject, test }) => {
+const MarksView = ({ batch, batchAdd, history, mark, subject }) => {
 	const [data, setData] = useState({})
 
 	const classes = useStyles()
@@ -49,7 +49,7 @@ const MarksView = ({ batch, batchAdd, history, subject, test }) => {
 			label: 'Select Test/Assignment',
 			name: 'test',
 			options: data.subject
-				? test
+				? mark
 						.filter(item => item.subject === data.subject)
 						.map(item => ({ label: item.name, value: item._id }))
 				: [],
@@ -77,7 +77,7 @@ const MarksView = ({ batch, batchAdd, history, subject, test }) => {
 const mapStatesToProps = state => ({
 	batch: state.batch,
 	subject: state.subject,
-	test: state.test,
+	mark: state.mark,
 })
 
 const useLocalStyles = makeStyles(theme => ({
