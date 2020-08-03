@@ -1,11 +1,14 @@
-import { AUTH_UPDATE } from '../actions/types'
+import { ACC_ADD, AUTH_UPDATE } from '../actions/types'
 
 const initialState = {}
 
-export default (state = initialState, action) => {
-	switch (action.type) {
+export default (state = initialState, { payload, type }) => {
+	switch (type) {
+		case ACC_ADD: {
+			return { ...state, user: payload }
+		}
 		case AUTH_UPDATE:
-			return { ...state, ...action.payload }
+			return { ...state, ...payload }
 		default:
 			return state
 	}

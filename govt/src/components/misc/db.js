@@ -37,6 +37,9 @@ const pausedHandler = info => {
 
 // document types
 export const TYPE_BATCH = 'batch'
+export const TYPE_BLOCK = 'block'
+export const TYPE_DISTRICT = 'district'
+export const TYPE_STATE = 'state'
 export const TYPE_STUDENT = 'student'
 export const TYPE_SUBJECT = 'subject'
 export const TYPE_MARK = 'mark'
@@ -48,12 +51,20 @@ export const dbAllDocs = options => {
 	return db.allDocs(options)
 }
 
-// function to sync all databases
+// function to add a new document
 export const dbPost = data => {
 	const db = new PouchDB(DB_URL)
 	db.info()
 	localStorage.setItem('changes', 'offline')
 	return db.post(data)
+}
+
+// function to add/modify a document
+export const dbPut = data => {
+	const db = new PouchDB(DB_URL)
+	db.info()
+	localStorage.setItem('changes', 'offline')
+	return db.put(data)
 }
 
 // function to sync all databases
@@ -73,4 +84,18 @@ export const dbSync = () => {
 		.on('error', errorHandler)
 		// replication paused (e.g. replication up to date, user went offline)
 		.on('paused', pausedHandler)
+}
+
+// function to determine the type of user
+export const getUserType = name => {
+	switch (name[0]) {
+		case 'b':
+			return TYPE_BLOCK
+		case 'd':
+			return TYPE_DISTRICT
+		case 's':
+			return TYPE_STATE
+		default:
+			return null
+	}
 }
