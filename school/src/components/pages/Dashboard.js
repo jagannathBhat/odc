@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment } from 'react'
+import React, { useEffect } from 'react'
 import {
 	Button,
 	Card,
@@ -15,7 +15,7 @@ import { dbSync } from '../misc/db'
 
 const temp = [0, 1, 2, 3, 4, 5, 6]
 
-const Dashboard = ({ auth, status }) => {
+const Dashboard = ({ auth, reducerInit, status }) => {
 	const localClasses = useLocalStyles()
 
 	useEffect(() => {
@@ -60,14 +60,18 @@ const Dashboard = ({ auth, status }) => {
 				<Typography component='h1' variant='h5'>
 					Status
 				</Typography>
-				<Typography color='textSecondary' component='p' variant='body1'>
-					{status.map((item, index) => (
-						<Fragment key={index}>
-							{item}
-							<br />
-						</Fragment>
-					))}
-				</Typography>
+				{localStorage.getItem('changes') && (
+					<>
+						<Typography color='textSecondary' component='p' variant='body1'>
+							{localStorage.getItem('changes') === 'online'
+								? 'All changes saved online'
+								: 'Some changes are offline'}
+						</Typography>
+						<Typography color='textSecondary' component='p' variant='body1'>
+							{status.message}
+						</Typography>
+					</>
+				)}
 			</div>
 			<div className={localClasses.recent}>
 				<Typography component='h1' variant='h5'>
