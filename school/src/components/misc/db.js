@@ -50,6 +50,7 @@ export const dbAllDocs = options => {
 export const dbPost = data => {
 	const db = new PouchDB(store.getState('auth').auth.username)
 	db.info()
+	localStorage.setItem('changes', 'offline')
 	return db.post(data)
 }
 

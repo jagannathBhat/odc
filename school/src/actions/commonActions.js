@@ -16,6 +16,8 @@ import {
 	TYPE_MARK,
 } from '../components/misc/db'
 
+const n2s = item => (item < 10 ? `0${item}` : item)
+
 // action to add a batch
 export const batchAdd = data => async dispatch => {
 	try {
@@ -73,8 +75,32 @@ export const batchAdd = data => async dispatch => {
 	}
 }
 
+// prefered date format
+export const getDate = date => {
+	const currentDate = new Date()
+	const savedDate = new Date(date)
+
+	if (currentDate.getMinutes() === savedDate.getMinutes()) return 'just now'
+
+	let preferedDate =
+		n2s(savedDate.getHours()) + ':' + n2s(savedDate.getMinutes())
+	if (
+		!currentDate.getDate() === savedDate.getDate() ||
+		!currentDate.getMonth() === savedDate.getMonth() ||
+		!currentDate.getFullYear() === savedDate.getFullYear()
+	)
+		preferedDate +=
+			' ' +
+			n2s(savedDate.getDate()) +
+			'/' +
+			n2s(savedDate.getMonth() + 1) +
+			'/' +
+			savedDate.getFullYear()
+	return preferedDate
+}
+
 // fetch all data to initialise the reducers
-export const reducerInit = data => async dispatch => {
+export const reducerInit = () => async dispatch => {
 	try {
 		// reducers
 		const reducers = [
