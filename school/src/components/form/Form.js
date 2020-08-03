@@ -11,7 +11,12 @@ const Form = ({ data, hideSubmit, inputs, submitHandler }) => {
 	const localClasses = useLocalStyles()
 
 	return (
-		<>
+		<form
+			onSubmit={event => {
+				event.preventDefault()
+				submitHandler()
+			}}
+		>
 			{inputs.map((input, index) => {
 				const { autofocus, handler, label, name, type } = input
 				switch (type) {
@@ -71,6 +76,23 @@ const Form = ({ data, hideSubmit, inputs, submitHandler }) => {
 							</div>
 						)
 					}
+					case 'password': {
+						return (
+							<Fragment key={index}>
+								<TextField
+									autoFocus={autofocus}
+									className={localClasses.input}
+									label={label}
+									name={name}
+									onChange={handler}
+									type={type}
+									value={data[name] ? data[name] : ''}
+									variant='outlined'
+								/>
+								<br />
+							</Fragment>
+						)
+					}
 					case 'select': {
 						return (
 							<Fragment key={index}>
@@ -116,13 +138,13 @@ const Form = ({ data, hideSubmit, inputs, submitHandler }) => {
 				<Button
 					className={localClasses.submit}
 					color='primary'
-					onClick={submitHandler}
+					type='submit'
 					variant='contained'
 				>
 					Submit
 				</Button>
 			)}
-		</>
+		</form>
 	)
 }
 
