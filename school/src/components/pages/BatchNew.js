@@ -42,7 +42,7 @@ const BatchNew = ({ batchAdd, history }) => {
 
 	const submitHandler = () => {
 		batchAdd(data)
-		history.push('/')
+		history.push('/dashboard')
 	}
 
 	const inputs = [

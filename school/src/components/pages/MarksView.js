@@ -6,10 +6,9 @@ import { withRouter } from 'react-router-dom'
 import BackButton from '../misc/BackButton.js'
 import Form from '../form/Form.js'
 import MarkList from '../mark/MarkList.js'
-import { batchAdd } from '../../actions/commonActions.js'
 import { useStyles } from '../../theme'
 
-const MarksView = ({ batch, batchAdd, history, mark, subject }) => {
+const MarksView = ({ batch, history, mark, subject }) => {
 	const [data, setData] = useState({})
 
 	const classes = useStyles()
@@ -18,11 +17,6 @@ const MarksView = ({ batch, batchAdd, history, mark, subject }) => {
 
 	const inputHandler = ({ target: { name, value } }) =>
 		setData({ ...data, [name]: value })
-
-	const submitHandler = () => {
-		batchAdd(data)
-		history.push('/')
-	}
 
 	const inputs = [
 		{
@@ -67,7 +61,6 @@ const MarksView = ({ batch, batchAdd, history, mark, subject }) => {
 				data={data}
 				hideSubmit={true}
 				inputs={inputs}
-				submitHandler={submitHandler}
 			/>
 			<MarkList id={data.test} />
 		</div>
@@ -86,4 +79,4 @@ const useLocalStyles = makeStyles(theme => ({
 	},
 }))
 
-export default connect(mapStatesToProps, { batchAdd })(withRouter(MarksView))
+export default connect(mapStatesToProps)(withRouter(MarksView))
