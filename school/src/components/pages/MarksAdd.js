@@ -32,7 +32,7 @@ const MarksAdd = ({ batch, history, subject, student, marksAdd }) => {
 
 	const submitHandler = () => {
 		marksAdd(data)
-		history.push('/')
+		history.push('/dashboard')
 	}
 
 	const inputs = [

@@ -6,14 +6,12 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import './App.css'
 import BatchNew from './components/pages/BatchNew'
 import Dashboard from './components/pages/Dashboard'
-import InitReducers from './components/misc/InitReducers'
+import Login from './components/pages/Login'
 import MarksAdd from './components/pages/MarksAdd'
 import MarksView from './components/pages/MarksView'
+import PrivateRoute from './components/misc/PrivateRoute'
 import store from './store'
 import { getMode, setMode } from './actions/darkModeActions'
-import { dbSync } from './components/misc/db'
-
-dbSync()
 
 const App = () => {
 	const [darkMode, setDarkMode] = useState(getMode())
@@ -32,14 +30,14 @@ const App = () => {
 	return (
 		<Provider store={store}>
 			<ThemeProvider theme={theme}>
-				<InitReducers />
 				<CssBaseline />
 				<Router>
 					<Switch>
-						<Route component={Dashboard} exact path='/' />
-						<Route component={BatchNew} exact path='/batch/new' />
-						<Route component={MarksAdd} exact path='/marks/add' />
-						<Route component={MarksView} exact path='/marks/view' />
+						<Route component={Login} exact path='/' />
+						<PrivateRoute component={Dashboard} exact path='/dashboard' />
+						<PrivateRoute component={BatchNew} exact path='/batch/new' />
+						<PrivateRoute component={MarksAdd} exact path='/marks/add' />
+						<PrivateRoute component={MarksView} exact path='/marks/view' />
 					</Switch>
 				</Router>
 			</ThemeProvider>
